@@ -2148,8 +2148,9 @@ class NTDSHashes:
         trustAuthType = trustAuthTypeList[unpack('<L', unhexlify(authInfo[16:16+8]))[0]]
         trustPasswordNT = "Can only process CLEAR AUTH trusts"
         trustPassword = ""
+        trustPasswordLength = unpack('<h',unhexlify(authInfo[24:28]))[0]
         if(trustAuthType == "CLEAR"):
-            trustPassword = authInfo[32:88]
+            trustPassword = authInfo[32:32+trustPasswordLength*2]
             trustPasswordNT = hashlib.new('md4', unhexlify(trustPassword)).digest().hex()
             trustPassword = b64encode(unhexlify(trustPassword)).decode()
 
@@ -2167,8 +2168,9 @@ class NTDSHashes:
         authInfoOld = tdoInfo[authInfoOffsetOld*2:]
         trustPasswordNTOld = "Can only process CLEAR AUTH trusts"
         trustPasswordOld = ""
+        trustPasswordLength = unpack('<h',unhexlify(authInfoOld[24:28]))[0]
         if(trustAuthType == "CLEAR"):
-            trustPasswordOld = authInfoOld[32:88]
+            trustPasswordOld = authInfoOld[32:32+trustPasswordLength*2]
             trustPasswordNTOld = hashlib.new('md4', unhexlify(trustPasswordOld)).digest().hex()
             trustPasswordOld = b64encode(unhexlify(trustPasswordOld)).decode()
 
